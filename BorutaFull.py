@@ -27,6 +27,8 @@ x = data.drop(columns='AP')
 
 y = df["AP"]
 
+#importance score method, default XGBregressor
+
 rf = XGBRegressor(n_jobs=3, max_depth=1)
 
 # define Boruta feature selection method
