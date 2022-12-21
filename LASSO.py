@@ -13,39 +13,34 @@ from sklearn.preprocessing import PolynomialFeatures
 
 
 #read in data
-df = pd.read_excel('RxnScreenDesc.xlsx', 'Desc')
+
+df = pd.read_excel('ModelExcel.xlsx', 'Desc')
 df.drop(columns='Ligand_name', inplace=True)
 
 
-#df2 = pd.read_excel('Descriptorsfromlasso.xlsx', 'Sheet6')
 
 #select subset of data
 data_y = pd.DataFrame(df)
 data_x = pd.DataFrame(df)
-#define predictor and response variables
-#numerics = ['int16','int32','int64','float16','float32','float64']
-#numerical_vars = list(data_x.select_dtypes(include=numerics).columns)
-#data = data_x[numerical_vars]
 
-#vals = df2['names6'].values.tolist()
-
-#x = df[vals]
 
 x = data_x.drop(columns='AP')
-
-#x = pd.read_excel('RemoveCorrelated3.xlsx')
-
 y = df["AP"]
 
 
+# train test split
+xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size=0.2)
 
-xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size=2)
-
+#pipeline with scaler and LASSO
 pipeline = Pipeline([('scaler', StandardScaler()), ('model', Lasso(selection='random', max_iter=5000))])
+
+#crossvalidation method
 
 cv = RepeatedKFold(n_splits=5, n_repeats=3)
 
 #cv = RepeatedKFold(n_splits=10, n_repeats=3, random_state=1)
+
+#GridSearch to find alpha
 
 search = GridSearchCV(pipeline,
                       {'model__alpha':np.arange(0.001,1,0.01)},
@@ -62,9 +57,8 @@ intercept = search.best_estimator_.named_steps['model'].intercept_
 
 importance = np.abs(coefficients)
 
-
+#save output to txt
 file_path ='Lasso2.txt'
-#file_path ='Run8_fromLassoKarsinta2.txt'
 sys.stdout = open(file_path, "w")
 
 #score = model.score(xtrain, ytrain)
@@ -77,6 +71,8 @@ print(coefficients)
 print(list(zip(np.array(xtrain.columns)[importance>0], np.array(coefficients)[importance>0])))
 
 #eli5.show_weights(search, top=-1, feature_names = xtrain.columns.tolist())
+
+#plot predicted vs train and test
 
 y_train_pred = search.predict(xtrain)
 r1 = r2_score(ytrain, y_train_pred)
