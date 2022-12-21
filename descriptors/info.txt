@@ -1,0 +1,1 @@
+Tools to calculate descriptors from xtb/CREST or SMILES strings
