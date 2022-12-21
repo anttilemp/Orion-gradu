@@ -12,10 +12,10 @@ from sklearn.svm import SVR
 
 
 #read in data
-df = pd.read_excel('RxnScreenDesc.xlsx', 'Desc')
+df = pd.read_excel('ModelExcel.xlsx', 'Desc')
 df.drop(columns='Ligand_name', inplace=True)
 
-x = df[['Ni_charge_Boltz']]
+x = df[['Descriptor1']]
 
 y = df["AP"]
 
