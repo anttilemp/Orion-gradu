@@ -25,7 +25,7 @@ def compute(file):
         
     return ce
     
-#electronic_temperature=1000
+#finds carbonyl ligands and outputs IDs for carbon and oxygens
 def carbonyl(xyz_file):
     
     mol = next(pybel.readfile("xyz", xyz_file))
@@ -51,6 +51,7 @@ def carbonyl(xyz_file):
     print(ids)            
     return ids
 
+#calculates global descriptors
 def get_descriptors(conf_ensemble):
     print("Calculating global descriptors!")
     for conf in conf_ensemble.conformers:
@@ -88,7 +89,7 @@ def get_descriptors(conf_ensemble):
 
     return pd.Series(props)
 
-
+#calculates local descriptors for nickel and every c and o.
 def get_local_descriptors(conf_ensemble, ni, c1, o1, c2, o2):
     print("Calculating local descriptors!")
     for conf in conf_ensemble.conformers:
@@ -212,6 +213,7 @@ def get_local_descriptors(conf_ensemble, ni, c1, o1, c2, o2):
 
     return pd.Series(props)
 
+#calculates CO frequencies
 def freq(conf_ensemble, ligand, ni, c1, o1, c2, o2):
     print(f"Calculating freq descriptors for {ligand}!")
     n = 1
@@ -222,7 +224,7 @@ def freq(conf_ensemble, ligand, ni, c1, o1, c2, o2):
         
             
             
-        
+        #define hessian file path (output from xtb crest optimization -hessian)
         hessian = f'/home/antti/Työpöytä/Optimoidut_GFN2/AQuick_opti/UudetEmakset/{ligand}/PROP/TMPCONF{n}/hessian'
             
         
@@ -264,30 +266,21 @@ def freq(conf_ensemble, ligand, ni, c1, o1, c2, o2):
 
 if __name__ == "__main__":
     
-    #fold = ['CMPhos', 'CyJohnPhos', 'JohnPhos', 'PhDavePhos', 'PtBu3', 'CPhos', 'BINAP', 'Xantphos']
-                                                                                                
-    #fold = ['AcaPhos', 'CgMe', 'DBU', 'DCEPhos', 'DCPP', 'DPPB', 'DPPE', 'DPPF', 'PAnis', 'PCF3','PhXPhos', 'PPh3','SPhos']                                                                                     
-                                                                                                
-    #fold = ['DBU', 'DPPF']
-    
-    #fold = ['BippyPhos', 'BuchPyr', 'Dimethamino', 'DPEPhos', 'Dppp', 'EPhos', 'EthaneP', 'Furyl', 'iPrPhosphite', 'NXant', 'PCy3', 'PentanePhenP', 'RuPhos', 'TBuCyP', 'TriFP']
-    #file = r'/home/antti/Työpöytä/Optimoidut/DCPP/PROP'
-    
-    #fold = ['BippyPhos', 'BuchPyr', 'Dimethamino', 'DPEPhos', 'Dppp', 'EPhos', 'EthaneP']
-    #fold = ['IPr_GFN1', 'IAd_GFN1', '2Oxazoline']
-    
-    fold = ['DBUN', 'DBUO', 'DBU66Ring', 'DBU68Ring', 'DBU77Ring', 'DBU86Ring']
+   
+    #define folder names from crest
+    fold = ['complex1', 'complex2', 'complex3', 'xxxx', 'xxxx', 'xxxx']
     
     m3 = pd.DataFrame()
     m4 = pd.DataFrame()
     
     for ligand in fold:
+        #define path that contains the complex folders defined earlier
         path = f'/home/antti/Työpöytä/Optimoidut_GFN2/AQuick_opti/UudetEmakset/{ligand}/PROP'
     
         m = compute(path)
     
         descs = get_descriptors(m)
-    
+        #define path that contains the complex folders defined earlier
         xyz_file = f'/home/antti/Työpöytä/Optimoidut_GFN2/AQuick_opti/UudetEmakset/{ligand}/crest_best.xyz'
     
         id = carbonyl(xyz_file)
@@ -301,7 +294,7 @@ if __name__ == "__main__":
    
         descs_local = get_local_descriptors(m, ni, c1, o1, c2, o2)
         m3 = m3.append(descs_local, ignore_index=True)
-        
+        #define path that contains the complex folders defined earlier
         path2 = f'/home/antti/Työpöytä/Optimoidut_GFN2/AQuick_opti/UudetEmakset/{ligand}/'
         m2 = compute(path2)
         
@@ -309,14 +302,14 @@ if __name__ == "__main__":
         
         m4 = m4.append(vib, ignore_index=True)
         
-    
+    #print to file
     print(f"Done! Writing to file.")
     m3 = m3.join(m4)
     ind = pd.DataFrame(fold)
     ind.columns = ['Ligand name']
     
     result = m3.join(ind)
-    with open(f"DBUBenzene_derivatives_v7.csv", "wb") as f:
+    with open(f"output.csv", "wb") as f:
         result.set_index('Ligand name', inplace=True)
         result.to_csv(f)
     
