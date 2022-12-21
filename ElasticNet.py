@@ -13,27 +13,17 @@ from sklearn.preprocessing import PolynomialFeatures
 
 
 #read in data
-df = pd.read_excel('RxnScreenDesc.xlsx', 'Desc')
+df = pd.read_excel('ModelExcel.xlsx', 'Desc')
 df.drop(columns='Ligand_name', inplace=True)
 
 
-#df2 = pd.read_excel('Descriptorsfromlasso.xlsx', 'Sheet6')
 
 #select subset of data
 data_y = pd.DataFrame(df)
 data_x = pd.DataFrame(df)
-#define predictor and response variables
-#numerics = ['int16','int32','int64','float16','float32','float64']
-#numerical_vars = list(data_x.select_dtypes(include=numerics).columns)
-#data = data_x[numerical_vars]
 
-#vals = df2['names6'].values.tolist()
-
-#x = df[vals]
 
 x = data_x.drop(columns='AP')
-
-#x = pd.read_excel('RemoveCorrelated3.xlsx')
 
 y = df["AP"]
 
@@ -64,7 +54,6 @@ importance = np.abs(coefficients)
 
 
 file_path ='ElasticNet.txt'
-#file_path ='Run8_fromLassoKarsinta2.txt'
 sys.stdout = open(file_path, "w")
 
 #score = model.score(xtrain, ytrain)
