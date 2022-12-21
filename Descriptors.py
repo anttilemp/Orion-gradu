@@ -14,6 +14,9 @@ from morfeus import Sterimol, BuriedVolume, Pyramidalization, LocalForce
 
 
 # def compute(smiles, n_confs=None, program='xtb', method='GFN2-xTB', basis=None, solvent=None):
+
+# input optimization method, default GFN2-xTB
+
 def compute(smiles, program='xtb', method='GFN2-xTB'):
 
     print(f"Calculating {smiles} conformer ensemble!")
@@ -47,6 +50,7 @@ def compute(smiles, program='xtb', method='GFN2-xTB'):
 
     return ce
 
+# calculates descriptors from conformer ensemble
 
 def get_descriptors(conf_ensemble):
     print("Calculating global descriptors!")
@@ -79,6 +83,7 @@ def get_descriptors(conf_ensemble):
 
     return pd.Series(props)
 
+# finds boric acid or halogen and its neighboring carbon and outputs the IDs. If no match, only global descriptors are calculated
 
 def neighbors(smiles):
     mol = Chem.MolFromSmiles(smiles)
@@ -122,7 +127,7 @@ def neighbors(smiles):
         print(f"No matches. Calculating only global descriptors.")
         yield a, b
 
-
+# local descriptors for calculated IDs
 
 def get_local_descriptors(conf_ensemble, hal, car):
     print("Calculating local descriptors!")
@@ -182,7 +187,7 @@ def get_local_descriptors(conf_ensemble, hal, car):
 
 if __name__ == "__main__":
 
-    # read data and calculate conformers
+    # read data and calculate conformers, input file space separated SMILES strings .csv
     df = pd.read_csv('Testitesti.csv')
     data = df['SMILES']
 
