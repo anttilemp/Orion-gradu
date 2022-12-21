@@ -1,3 +1,6 @@
+"""calculate descriptors for boric acids and halides"""
+
+
 import os
 import argparse
 import pickle
