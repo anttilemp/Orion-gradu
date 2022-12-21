@@ -1,0 +1,31 @@
+http://hjkgrp.mit.edu/molsimplify-tutorials/
+https://github.com/hjkgrp/molSimplify
+
+https://xtb-docs.readthedocs.io/en/latest/contents.html
+https://github.com/grimme-lab/xtb
+
+Requirements: Linux operating system
+
+First create transition metal complex with molSimplify console commands. First add ligand and then build the
+complex.
+
+molsimplify -ligadd "SMILES" -ligname name -ligcon 1,8 -skipANN True
+
+molsimplify -core ni -lig name co -ligocc 2 2 -geo sqp -oxstate 0
+
+Optimize the built complex with xtb. Then run crest. First command is more computationally
+demanding. Add --quick if faster results are wanted. Quality is quite same for lowest
+conformer.
+
+Optimization of initial structure:
+
+xtb file --opt
+
+Crest conformer sampling tool: 
+
+crest xtbopt.xyz --gfn2 --prop hess --niceprint | tee console.txt
+
+crest xtbopt.xyz --gfn2 --quick --prop hess --niceprint | tee console.txt
+
+
+change crest_ensemble.zyx --> crest_conformers.xyz before running descriptor script.
