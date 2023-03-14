@@ -1,2 +1,3 @@
 CREST output example: DBU
-LigandDescriptor.py output: RESTScreen
+LigandDescriptors.py output: RESTScreen
+molSimplify output: ni_sqp_0_DBU_2_co_2_s_3 (includes xtbopt file where molSimplify output has been optimized with GFN2-xTB before CREST run)
