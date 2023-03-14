@@ -1,0 +1,22 @@
+# Input file generated from molSimplify at 05/27/2022 12:12
+-checkdirb True
+-core Ni
+-oxstate 0
+-coord 4
+-geometry sqp
+-lig DBU,co
+-ligocc 2,2
+-spin 3
+-keepHs auto,auto
+-rundir /home/antti/Runs
+-ff uff
+-ffoption ba
+-nconfs 1
+-calccharge True
+-distort 0
+-qccode terachem
+-runtyp energy
+-method b3lyp
+-basis lacvps_ecp
+-jsched sge
+-bcharge 0
